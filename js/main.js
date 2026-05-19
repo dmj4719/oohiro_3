@@ -161,6 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
         email: entryForm.querySelector('[name="email"]').value,
         currentJob: entryForm.querySelector('[name="currentJob"]').value,
         message: entryForm.querySelector('[name="message"]').value,
+        page_url: window.location.href,
         utm_source: entryForm.querySelector('[name="utm_source"]').value,
         utm_medium: entryForm.querySelector('[name="utm_medium"]').value,
         utm_campaign: entryForm.querySelector('[name="utm_campaign"]').value,
