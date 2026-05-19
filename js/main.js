@@ -1,6 +1,5 @@
-var GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxRiSNcdvWj6g62D0SFKewIbT48TirW7hPurJMsXwU33FkNOxcuF1ddAAWkpaoG-IQrlQ/exec";
-
 document.addEventListener("DOMContentLoaded", function () {
+  emailjs.init("EP-hfSXZ05nhzr9ZJ");
   var toggle = document.querySelector(".menu-toggle");
   var nav = document.querySelector(".global-nav");
   var header = document.querySelector(".site-header");
@@ -149,38 +148,35 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      var formData = new FormData(entryForm);
-      // application/x-www-form-urlencoded で送信（preflight 回避）
-      var params = new URLSearchParams();
-      formData.forEach(function (value, key) { params.append(key, value); });
-
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.dataset.originalText = submitBtn.textContent;
         submitBtn.textContent = "送信中...";
       }
 
-      fetch(GAS_ENDPOINT, {
-        method: "POST",
-        body: params
-      })
-        .then(function (res) { return res.json().catch(function () { return { ok: false }; }); })
-        .then(function (data) {
-          if (data && data.ok) {
-            window.location.href = "./thanks.html";
-          } else {
-            showError("送信に失敗しました。お手数ですが時間をおいて再度お試しください。");
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.textContent = submitBtn.dataset.originalText || "エントリーする";
-            }
-          }
+      var templateParams = {
+        name: entryForm.querySelector('[name="name"]').value,
+        age: entryForm.querySelector('[name="age"]').value,
+        tel: entryForm.querySelector('[name="tel"]').value,
+        email: entryForm.querySelector('[name="email"]').value,
+        currentJob: entryForm.querySelector('[name="currentJob"]').value,
+        message: entryForm.querySelector('[name="message"]').value,
+        utm_source: entryForm.querySelector('[name="utm_source"]').value,
+        utm_medium: entryForm.querySelector('[name="utm_medium"]').value,
+        utm_campaign: entryForm.querySelector('[name="utm_campaign"]').value,
+        utm_content: entryForm.querySelector('[name="utm_content"]').value,
+        utm_term: entryForm.querySelector('[name="utm_term"]').value
+      };
+
+      emailjs.send("service_vnyk47y", "template_t0nvy1j", templateParams)
+        .then(function () {
+          window.location.href = "./thanks.html";
         })
         .catch(function () {
-          showError("通信エラーが発生しました。ネットワーク環境をご確認の上、再度お試しください。");
+          showError("送信に失敗しました。お手数ですが時間をおいて再度お試しください。");
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = submitBtn.dataset.originalText || "エントリーする";
+            submitBtn.textContent = submitBtn.dataset.originalText || "応募する";
           }
         });
     });
